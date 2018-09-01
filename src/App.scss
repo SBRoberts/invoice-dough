@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+html{
+	font-weight: 400;
+	/* Fluid font sizing | scales based on viewport width and desired min/max font sizes*/
+	font-size: calc(14px + (30 - 14) * ((100vw - 320px) / (1440 - 320)));
+	letter-spacing: .03rem;
+}
+
+h1{
+    font-size: .7rem;
+    text-align: center;
+    width: 100%;
+}
+h2, h3{
+    font-size: 1rem;
+}
+h4, p{
+    font-size: .6rem;
+}
+
+img{
+    max-width: 100%;
+}
+.App{
+    display: flex;
+}
+.sidePanel{
+    width: 25%;
+    height: 100vh;
+    background: #f1f1f1;
+    margin-right: 1rem;
+}
+
+.login{
+    font-size: .5rem;
+    &__panel{
+        // padding: .5rem;
+    }
+    &__profilePic{
+        width: 2rem;
+        border-radius: 50%;
+    }
+}
+button{
+        position: relative;
+        width: 33%;
+        background:#f1f1f1;
+        margin: .25rem 0;
+        padding: .15rem .25rem;
+        border: 2px solid #1d1d1d;
+        z-index: 999;
+        transition: all .2s, border .3s;
+        // &:before{
+        //     content: '';
+        //     position: absolute;
+        //     top: 0;
+        //     right: 0;
+        //     bottom: 0;
+        //     left: 0;
+        //     border: 2px solid transparent;
+        //     transition: all .3s, border .5s;
+        //     z-index: -1;
+        // }
+        &:hover{
+            border-color: crimson;
+            color: crimson;
+            // &:before{
+            //     border: 2px solid crimson;
+            //     top: .33rem;
+            //     right: -.33rem;
+            //     bottom: -.33rem;
+            //     left: .33rem;
+            // }
+        }
+
+    }
+
+.row{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    &__padding{
+        padding: 0.25rem;
+    }
+    &__justifyCenter{
+        justify-content: center;
+    }
+    &__spaceBetween{
+        justify-content: space-between;
+    }
+}
+ul{
+    list-style: none;
+    padding: 0;
+}
+li{
+    z-index: 999;
+    div{
+        z-index: -1;
+    }
+}
+
+form{
+    input, textarea{
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: .25rem;
+        margin: .25rem;
+        resize: none;
+        font-family: sans-serif;
+        font-size: .6rem;
+        &::placeholder{
+        }
+        // &[type="text"],
+        // &[type="number"]{
+        // }
+    }
+}
+
+.openInvoice{
+    padding: 0;
+    h3{
+        font-size: .6rem;
+    }
+}
+
+section{
+    padding: 0 0.5rem;
+}
