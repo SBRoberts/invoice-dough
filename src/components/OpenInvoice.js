@@ -51,8 +51,10 @@ const OpenInvoice = (props) => {
                                     const taskObj = task[1];
                                     return (
                                         <li className="openInvoice openInvoice__tasks oopenInvoice__tasks--item" key={key} id={key} >
-
-                                            <button onClick={props.updateTask} >Save Changes</button>
+                                            <div className="row row__spaceBetween">
+                                                <button onClick={props.updateTask} >Save Changes</button>
+                                                <button onClick={props.removeTask} >Remove Task</button>
+                                            </div>
 
                                             <input id="taskName" onChange={this.handleChange} type="text" placeholder="Task Name" defaultValue={taskObj.taskName}/>
 

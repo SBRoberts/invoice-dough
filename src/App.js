@@ -133,8 +133,10 @@ class App extends Component {
     }
 
     updateTask = (e) => {
-        const key = e.target.parentElement.id
-        const inputs = e.target.parentElement.childNodes
+        const key = e.target.parentElement.parentElement.id
+        const inputs = e.target.parentElement.parentElement.childNodes
+        console.log(inputs);
+        
         const task = {
             taskName: inputs[1].value,
             hours: inputs[2].value,
