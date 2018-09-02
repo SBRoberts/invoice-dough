@@ -58,6 +58,7 @@ class App extends Component {
                 })
             }
         });
+
     }
 
     signOut() {
@@ -118,9 +119,10 @@ class App extends Component {
         if(invoiceId){
             dbRef.child(`${invoiceId}`).on('value', (snapshot) => {
                 const openInvoice = snapshot.val()
-                console.log(snapshot)
                 const key = snapshot.key
+                const tasks = Object.entries(openInvoice.tasks);
                 openInvoice.key = key;
+                openInvoice.tasks = tasks;
                 
                 this.setState({
                     openInvoice,
@@ -128,6 +130,46 @@ class App extends Component {
                 
             })
         }
+    }
+
+    updateTask = (e) => {
+        const key = e.target.parentElement.id
+        const inputs = e.target.parentElement.childNodes
+        const task = {
+            taskName: inputs[1].value,
+            hours: inputs[2].value,
+            description: inputs[4].value,
+            sum: `${inputs[2].value * this.state.openInvoice.hourlyRate}`,
+        }
+
+        const tempArr = Array.from(this.state.openInvoice.tasks)
+        tempArr.forEach((invoice) => {
+            if(invoice[0] === key){
+                const index = tempArr.indexOf(invoice)
+                tempArr[index][1] = task
+                return tempArr
+            }
+            
+        });
+        this.setState({
+            openInvoice: {
+                dateModified: this.getDate(),
+                tasks: tempArr,
+            }
+        })
+
+        // console.log(this.state.openInvoice.tasks);
+        console.log(key);
+        
+
+        const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${this.state.openInvoice.key}/tasks/${key}`)
+        dbRef.update(task)
+    }
+
+    closeInvoice = () => {
+        this.setState({
+            openInvoice: null,
+        })
     }
 
     render() {
@@ -166,7 +208,7 @@ class App extends Component {
                             // if toggle invoice is true, add it to this div
                             this.state.toggleInvoice && this.state.loggedIn
                             ?
-                            <CreateInvoice loggedIn={this.state.loggedIn} uid={this.state.user.uid} getDate={this.getDate} />
+                            <CreateInvoice loggedIn={this.state.loggedIn} uid={this.state.user.uid} getDate={this.getDate} openInvoice={this.state.openInvoice}/>
                             :
                             null
                         }
@@ -187,7 +229,7 @@ class App extends Component {
                 {
                     this.state.openInvoice
                     ?
-                    <OpenInvoice openInvoice={this.state.openInvoice} displayName={this.state.user.displayName}/>
+                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask}/>
                     :
                     null
                 }

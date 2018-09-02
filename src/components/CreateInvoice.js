@@ -11,11 +11,22 @@ class CreateInvoice extends Component {
             loggedIn: props.loggedIn,
             user: props.uid,
             hourlyRate: 50,
-            dateCreated: this.props.getDate(),
             tasks: [],
         }
     }
     componentDidMount(){
+        if(this.props.openInvoice){
+            this.setState({
+                dateCreated: this.props.openInvoice.dateCreated,
+                invoiceKey: this.props.openInvoice.key,
+                invoiceCreated: true,
+                tasks: this.props.openInvoice.tasks,
+            })
+        } else{
+            this.setState({
+                dateCreated: this.props.getDate(),
+            })
+        }
     }
 
     handleSubmit = (e) => {
@@ -29,15 +40,14 @@ class CreateInvoice extends Component {
             // to get the current invoice, get a firebase to give us all the invoice keys when a value is updated
             dbRef.on('value', (snapshot) => {
                 if(snapshot.val()){
-                    const currentInvoice = Object.keys(snapshot.val());
-                    
-                    // the current invoice will always be the last object | currentInvoice.length - 1
-                    // set invoice created to true
-                    this.setState({
-                        invoiceCreated: true,
-                        invoiceKey: currentInvoice[currentInvoice.length - 1],
-                        dateCreated: this.props.getDate(),
-                    })
+                    if(!this.props.openInvoice){
+                        const currentInvoice = Object.keys(snapshot.val());
+                        // the current invoice will always be the last object | currentInvoice.length - 1
+                        this.setState({
+                            invoiceCreated: true,
+                            invoiceKey: currentInvoice[currentInvoice.length - 1],
+                        })
+                    }
                 }
             })
             dbRef.push(this.state)
@@ -58,12 +68,14 @@ class CreateInvoice extends Component {
         // targeting the specific invoice now
         // console.log(this.state.invoiceKey)
         const dbRef = firebase.database().ref(`users/${this.state.user}/${this.state.invoiceKey}/tasks`)
+        // console.log(dbRef.val())
 
         const confirmChoice = window.confirm(`Would you like to ${e.target.lastChild.innerHTML}?`);
 
         // if choice is confirmed, do the following else null
         if(confirmChoice){
-            let tasksArr = Array.from(this.state.tasks || []);
+            // IF THERE IS AN OPEN INVOICE, SET TASKSARR = THIS.PROPS.OPENINVOICE.TASKS, THEN PUSH THE NEW TASK TO THAT ARRAY, THEN PUSH THE NEW TASKS ARR TO FIREBASE
+            const tasksArr = Array.from(this.state.tasks);
             const task = {
                 taskName : e.target[0].value,
                 hours: e.target[1].value,
@@ -72,11 +84,13 @@ class CreateInvoice extends Component {
             }
             
             tasksArr.push(task)
-    
+            console.log(tasksArr)
+            
             this.setState({
                 tasks: tasksArr,
             })
-            dbRef.update(tasksArr)
+
+            dbRef.push(task)
 
         }
     }
@@ -85,27 +99,28 @@ class CreateInvoice extends Component {
         return(
             <div>
                 <form onSubmit={this.handleSubmit} className="row row__justifyCenter">
-                    <input onChange={this.handleChange} id="client" className="client" type="text" placeholder="Client Name" />
+                    <input onChange={this.handleChange} id="client" className="client" type="text" placeholder="Client Name" defaultValue={this.props.openInvoice ? this.props.openInvoice.client : null}/>
+
+                    {/* if there is an open invoice use the last it was modified or created, else create a new date */}
 
                     <input onChange={this.handleChange} id="dateCreated" className="dateCreated" type="text" defaultValue={this.state.dateCreated} />
 
                     <input onChange={this.handleChange} id="hourlyRate" className="hourlyRate" type="text" defaultValue={this.state.hourlyRate} />
 
+                    {
+                    this.state.invoiceCreated || this.props.openInvoice
+                    ?
+                    null
+                    :
                     <button type="submit">Add Invoice</button>
+                    }
+
                 </form >
                 {
-                this.state.invoiceCreated
+                // if an invoice was created, of if one is currently open, display the task component,else nothing
+                this.state.invoiceCreated || this.props.openInvoice
                 ?
-                // <form onSubmit={this.addTask} className="task row row__justifyCenter" >
-                //     <input id="taskName" onChange={this.handleChange} type="text" placeholder="Task Name" />
-
-                //     <input id="hours" onChange={this.handleChange} type="number" step="any" placeholder="Hours" />
-
-                //     <textarea id="description" className="row row__padding" onChange={this.handleChange} placeholder="Explain yourself..."></textarea>
-
-                //     <button type="submit">Add Task</button>
-                // </form>
-                <Task />
+                <Task addTask={this.addTask}/>
                 :
                 null
                 }

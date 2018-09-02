@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-import firebase from 'firebase';
+import React from 'react';
 
 const Task = (props) => {
     console.log(props)
-    // task will contain 3 key/value pairs - name, hours, sum
     return (
-        <form onSubmit={this.addTask} className="task row row__justifyCenter" >
+        <form onSubmit={props.addTask} className="task row row__spaceBetween" >
             <input id="taskName" onChange={this.handleChange} type="text" placeholder="Task Name" />
 
             <input id="hours" onChange={this.handleChange} type="number" step="any" placeholder="Hours" />

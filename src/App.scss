@@ -17,10 +17,10 @@ h1{
     width: 100%;
 }
 h2, h3{
-    font-size: 1rem;
+    font-size: .6rem;
 }
 h4, p{
-    font-size: .6rem;
+    font-size: .5rem;
 }
 
 img{
@@ -55,27 +55,9 @@ button{
         border: 2px solid #1d1d1d;
         z-index: 999;
         transition: all .2s, border .3s;
-        // &:before{
-        //     content: '';
-        //     position: absolute;
-        //     top: 0;
-        //     right: 0;
-        //     bottom: 0;
-        //     left: 0;
-        //     border: 2px solid transparent;
-        //     transition: all .3s, border .5s;
-        //     z-index: -1;
-        // }
         &:hover{
             border-color: crimson;
             color: crimson;
-            // &:before{
-            //     border: 2px solid crimson;
-            //     top: .33rem;
-            //     right: -.33rem;
-            //     bottom: -.33rem;
-            //     left: .33rem;
-            // }
         }
 
     }

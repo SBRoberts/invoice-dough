@@ -1,24 +1,26 @@
 import React from 'react';
 
 const OpenInvoice = (props) => {
+    
     const printDate = (date) => {
-        console.log(date)
         const newDate = date.split(' ').splice(1,3).join('/')
         return newDate
     }
-    let sum = 0;
     const tallySum = () => {
+        let sum = 0;
         props.openInvoice.tasks.map((task) => {
-            sum = sum + parseInt(task.sum);
+            sum = sum + parseInt(task[1].sum);
         })
         return sum
     }
+    
 
     return(
         <div className="openInvoice">
             <h2>Invoice</h2>
             <div>
-                {console.log(props)}
+                {/* {console.log(props)} */}
+                <button className="closeInvoice" onClick={props.closeInvoice}> Close Invoice </button>
                 {
                 <header className="openInvoice openInvoice__header">
                     <div className="row row__spaceBetween">
@@ -34,7 +36,7 @@ const OpenInvoice = (props) => {
                 </header>
                 }
                 <section className="openInvoice openInvoice__tasks">
-                    <div className="openInvoice openInvoice__tasks oopenInvoice__tasks--indexes">
+                    <div className="row row__spaceBetween openInvoice openInvoice__tasks oopenInvoice__tasks--indexes">
                         <h3>Services Rendered</h3>
                         <h3>Time</h3>
                         <h3>Amount</h3>
@@ -45,16 +47,19 @@ const OpenInvoice = (props) => {
                                 props.openInvoice.tasks
                                 ?
                                 props.openInvoice.tasks.map((task) => {
-                                    const key = props.openInvoice.tasks.indexOf(task)
+                                    const key = task[0];
+                                    const taskObj = task[1];
                                     return (
-                                        <li className="openInvoice openInvoice__tasks oopenInvoice__tasks--item" key={key} >
+                                        <li className="openInvoice openInvoice__tasks oopenInvoice__tasks--item" key={key} id={key} >
 
-                                            <input id="taskName" onChange={this.handleChange} type="text" placeholder="Task Name" defaultValue={task.taskName}/>
+                                            <button onClick={props.updateTask} >Save Changes</button>
 
-                                            <input id="hours" onChange={this.handleChange} type="number" step="any" placeholder="Hours" defaultValue={task.hours}/>
+                                            <input id="taskName" onChange={this.handleChange} type="text" placeholder="Task Name" defaultValue={taskObj.taskName}/>
 
-                                            <input type="number" placeholder="Sum" defaultValue={task.sum} />
-                                            <textarea id="description" className="row row__padding" onChange={this.handleChange} placeholder="Explain yourself..." defaultValue={task.description}></textarea>
+                                            <input id="hours" onChange={this.handleChange} type="number" step="any" placeholder="Hours" defaultValue={taskObj.hours}/>
+
+                                            <input type="number" placeholder="Sum" defaultValue={taskObj.sum} />
+                                            <textarea id="description" className="row row__padding" onChange={this.handleChange} placeholder="Explain yourself..." defaultValue={taskObj.description}></textarea>
                                         </li>
                                     )
                                 })
