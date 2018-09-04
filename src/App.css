@@ -32,7 +32,8 @@ img {
   grid-template-columns: 1fr 1fr 2fr; }
 
 button {
-  cursor: pointer; }
+  cursor: pointer;
+  outline: none; }
 
 button:not(.openInvoice__icon) {
   position: relative;
@@ -117,7 +118,8 @@ button:not(.openInvoice__icon) {
 
 .login__welcome h1.heading {
   font-size: 1.4rem;
-  text-align: left; }
+  text-align: left;
+  margin-bottom: 1rem; }
 
 .login__welcome h3.heading {
   font-size: .75rem;
