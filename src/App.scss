@@ -211,6 +211,9 @@ section.openInvoice{
         z-index: 999;
         cursor: pointer;
     }
+    svg{
+        z-index: 999;
+    }
     header, footer{
         background: $black;
         color: $white;

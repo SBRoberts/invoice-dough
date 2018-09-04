@@ -269,6 +269,9 @@ section.openInvoice {
   z-index: 999;
   cursor: pointer; }
 
+.openInvoice svg {
+  z-index: 999; }
+
 .openInvoice header, .openInvoice footer {
   background: #363537;
   color: ghostwhite;

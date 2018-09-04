@@ -59,6 +59,7 @@ const OpenInvoice = (props) => {
 
                                     <div className="row row__spaceBetween">
                                         <button className="openInvoice openInvoice__icon openInvoice__icon--save hideOnPrint" onClick={props.updateTask} ><i className="fas fa-save"></i> </button>
+                                        
                                         <button className="openInvoice openInvoice__icon openInvoice__icon--remove hideOnPrint" onClick={props.removeTask} ><i className="fas fa-trash"></i> </button>
                                     </div>
 

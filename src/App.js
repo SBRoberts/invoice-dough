@@ -188,8 +188,11 @@ class App extends Component {
     // will remove a task, if given an event target id
     removeTask = (e) => {
         const key = e.target.parentElement.parentElement.id
+        console.log(key);
+        
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${this.state.openInvoice.key}/tasks/${key}`)
         dbRef.remove()
+        
         console.log('Task Removed');
         
     }
