@@ -1,0 +1,65 @@
+$highlight: mediumspringgreen;
+$white: ghostwhite;
+$black: #363537;
+
+$headingFont: 'Rubik', sans-serif;
+$bodyFont: 'Roboto', sans-serif;
+
+@mixin position($p, $t, $r, $b, $l) {
+    position: $p;
+    top: $t;
+    right: $r;
+    bottom: $b;
+    left: $l;
+}
+@mixin highlight($color){
+    position: relative;
+    &:before{
+        content: "";
+        @include position(absolute, 65% ,10% , 15% , 10% );
+        // border-bottom: .3rem solid $color;
+        background: $color;
+        mix-blend-mode: multiply;
+        transition: right .3s, left .3s, top .3s, bottom .3s;
+    }
+    &:hover{
+        &:before{
+            border-width: .4rem;
+            // @include position(absolute,-.2rem ,-.1rem ,.2rem ,-.1rem );
+            @include position(absolute, 50% ,0 , 0 , 0 );
+        }
+    }
+}
+
+@mixin inputStyle() {
+    position: relative;
+    background: transparent;
+    border: none;
+    outline: none;
+    margin: .25rem 0;
+    resize: none;
+    width: 100%;
+    caret-color: $black;
+}
+
+@mixin inputContainer(){
+    @include inputStyle();
+    &:before{
+        content: "";
+        @include position(absolute,0 ,50% ,0 ,0);
+        border-bottom: 1px solid $black;
+        transition: right .3s ease-out;
+        z-index: 0;
+    }
+    &:after{
+        content: "";
+        @include position(absolute,0 ,0 ,0 , 50%);
+        border-bottom: 1px dashed $black;
+        z-index: 0;
+    }
+    &:hover{
+        &:before{
+            @include position(absolute,0 ,0 ,0 ,0);
+        }
+    }
+}

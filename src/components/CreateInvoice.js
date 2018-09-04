@@ -1,3 +1,5 @@
+// The CreateInvoice component is where invoices are created and tasks are added 
+
 import React, {Component} from 'react';
 import firebase from '../firebase';
 
@@ -66,15 +68,12 @@ class CreateInvoice extends Component {
         e.preventDefault();
 
         // targeting the specific invoice now
-        // console.log(this.state.invoiceKey)
         const dbRef = firebase.database().ref(`users/${this.state.user}/${this.state.invoiceKey}/tasks`)
-        // console.log(dbRef.val())
 
         const confirmChoice = window.confirm(`Would you like to ${e.target.lastChild.innerHTML}?`);
 
         // if choice is confirmed, do the following else null
         if(confirmChoice){
-            // IF THERE IS AN OPEN INVOICE, SET TASKSARR = THIS.PROPS.OPENINVOICE.TASKS, THEN PUSH THE NEW TASK TO THAT ARRAY, THEN PUSH THE NEW TASKS ARR TO FIREBASE
             const tasksArr = Array.from(this.state.tasks);
             const task = {
                 taskName : e.target[0].value,
@@ -84,14 +83,12 @@ class CreateInvoice extends Component {
             }
             
             tasksArr.push(task)
-            console.log(tasksArr)
             
             this.setState({
                 tasks: tasksArr,
             })
 
             dbRef.push(task)
-
         }
     }
 
@@ -99,18 +96,23 @@ class CreateInvoice extends Component {
         return(
             <div>
                 <form onSubmit={this.handleSubmit} className="row row__justifyCenter">
-                    <input onChange={this.handleChange} id="client" className="client" type="text" placeholder="Client Name" defaultValue={this.props.openInvoice ? this.props.openInvoice.client : null}/>
+                    <div className="inputContainer">
+                        <input onChange={this.handleChange} id="client" className="client" type="text" placeholder="Client Name" defaultValue={this.props.openInvoice ? this.props.openInvoice.client : null}/>
+                    </div>
 
                     {/* if there is an open invoice use the last it was modified or created, else create a new date */}
+                    <div className="inputContainer">
+                        <input onChange={this.handleChange} id="dateCreated" className="dateCreated" type="text" defaultValue={this.state.dateCreated} contentEditable="false"/>
+                    </div>
 
-                    <input onChange={this.handleChange} id="dateCreated" className="dateCreated" type="text" defaultValue={this.state.dateCreated} />
-
-                    <input onChange={this.handleChange} id="hourlyRate" className="hourlyRate" type="text" defaultValue={this.state.hourlyRate} />
+                    <div className="inputContainer">
+                        <input onChange={this.handleChange} id="hourlyRate" className="hourlyRate" type="text" defaultValue={this.state.hourlyRate} />
+                    </div>
 
                     {
                     this.state.invoiceCreated || this.props.openInvoice
                     ?
-                    null
+                    <h3>Add New Task</h3>
                     :
                     <button type="submit">Add Invoice</button>
                     }

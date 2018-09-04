@@ -1,7 +1,10 @@
+@import './partials/utilities';
+
 body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: $bodyFont;
+    background: $white;
 }
 
 html{
@@ -9,6 +12,10 @@ html{
 	/* Fluid font sizing | scales based on viewport width and desired min/max font sizes*/
 	font-size: calc(14px + (30 - 14) * ((100vw - 320px) / (1440 - 320)));
 	letter-spacing: .03rem;
+}
+
+section{
+    position: relative;
 }
 
 h1{
@@ -26,47 +33,141 @@ h4, p{
 img{
     max-width: 100%;
 }
+
 .App{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+}
+button{
+    cursor: pointer;
+}
+button:not(.openInvoice__icon){
+        @include highlight($highlight);
+        position: relative;
+        font-size: .55rem;
+        background: transparent;
+        margin: .25rem 0;
+        padding: .15rem .25rem;
+        border: none;
+        z-index: 999;
+        transition: all .2s, border .3s;
 }
 .sidePanel{
-    width: 25%;
+    position: relative;
     height: 100vh;
-    background: #f1f1f1;
-    margin-right: 1rem;
+    background: $highlight;
+    padding: 0 .5rem;
+    button{
+        @include highlight($white);
+    }
+    .heading{
+        margin-bottom: .5rem;
+        font-weight: 400;
+    }
+}
+.heading{
+    width: 100%;
+    font-family: $headingFont;
+    margin: .25rem 0;
+    &__left{
+        text-align: left;
+    }
+    &__small{
+        font-weight: 400;
+    }
+    &__big{
+        font-size: 1.5rem;
+        text-transform: uppercase;
+    }
+}
+
+.bar{
+    margin: 0 .2rem;
 }
 
 .login{
-    font-size: .5rem;
     &__panel{
+        width: 100%;
         // padding: .5rem;
     }
     &__profilePic{
-        width: 2rem;
+        width: 1.5rem;
         border-radius: 50%;
     }
-}
-button{
-        position: relative;
-        width: 33%;
-        background:#f1f1f1;
-        margin: .25rem 0;
-        padding: .15rem .25rem;
-        border: 2px solid #1d1d1d;
-        z-index: 999;
-        transition: all .2s, border .3s;
-        &:hover{
-            border-color: crimson;
-            color: crimson;
-        }
-
+    &.login__signOut{
+        margin-left: .5rem;
     }
+    &__welcome{
+        h1.heading{
+            font-size: 1.4rem;
+            text-align: left;
+        }
+        h3.heading{
+            font-size: .75rem;
+            text-align: left;
+        }
+    }
+    button{
+        font-size: .6rem;
+    }
+}
+
+.invoiceManager{
+    position: relative;
+    // width: 100%;
+    padding: 0 .5rem;
+    .heading{
+        font-size: .8rem;
+    }
+    input, textarea{
+        @include inputStyle();
+        width: 100%;
+        font-size: .6rem;
+        z-index: 999;
+    }
+    .inputContainer{
+        @include inputContainer();
+    }
+}
+
+.invoices{
+    ul{
+        display: grid;
+        grid-auto-rows: 1fr;
+    }
+    li{
+        @include highlight($white);
+        padding: 0 0.25rem;
+        border-width: .25rem;
+        &:before{
+            @include position(absolute,85%,0,10%,0);
+            // border-color: $white;
+        }
+        &:hover{
+            &:before{
+                @include position(absolute,0,0,0,0);
+                // border-width: 13vmin; 
+            }
+        }
+    }
+}
+
+.invoice{
+    cursor: pointer;
+    z-index: 999;
+    h3, h4{
+        z-index: -1;
+    }
+}
 
 .row{
     display: flex;
     width: 100%;
     flex-wrap: wrap;
     align-items: center;
+    &__half{
+        width: 50%;
+    }
     &__padding{
         padding: 0.25rem;
     }
@@ -76,43 +177,163 @@ button{
     &__spaceBetween{
         justify-content: space-between;
     }
+    &__justifyFlexEnd{
+        justify-content: flex-end;
+    }
+    &__alignCenter{
+        align-items: center;
+    }
+    &__alignStart{
+        align-items: flex-start;
+    }
+    &--nowrap{
+        flex-wrap: nowrap;
+    }
 }
 ul{
     list-style: none;
     padding: 0;
 }
-li{
-    z-index: 999;
-    div{
-        z-index: -1;
-    }
-}
 
-form{
-    input, textarea{
-        width: 100%;
-        border: none;
-        outline: none;
-        padding: .25rem;
-        margin: .25rem;
-        resize: none;
-        font-family: sans-serif;
-        font-size: .6rem;
-        &::placeholder{
-        }
-        // &[type="text"],
-        // &[type="number"]{
-        // }
-    }
+section.openInvoice{
+    padding: 0 .5rem;
 }
-
 .openInvoice{
-    padding: 0;
-    h3{
+    // z-index: -1;
+    input, textarea{
+        @include inputStyle();
+        font-family: $bodyFont;
         font-size: .6rem;
+        font-weight: 500;
+        width: 100% !important;
+        z-index: 999;
+        cursor: pointer;
+    }
+    header, footer{
+        background: $black;
+        color: $white;
+        padding: .5rem;
+        input{
+            color: $white;
+        }
+    }
+    header{
+        input, p{
+            margin: .5rem 0;
+        }
+    }
+    footer{
+        input, p{
+            font-size: .45rem;
+            font-weight: 400;
+            letter-spacing: .01rem;
+            &.heading{
+                font-size: 1rem;
+                font-family: $headingFont;
+                &__subHeading{
+                    font-size: .6rem;
+                }
+            }
+        }
+        .row{
+            justify-content: space-between;
+            &__half{
+                width: 60%;
+            }
+        }
+        .row__half:last-of-type{
+            justify-content: flex-end;
+            width: 40%;
+            input{
+                text-align: right;
+                width: 100%;
+                
+            }
+        }
+    }
+    &__body{
+        padding: .5rem;
+    }
+    li{
+        margin-bottom: 1rem;
+    }
+    .inputContainer{
+        @include inputContainer();
+    }
+    .taskName{
+        width: 60%;
+        text-transform: uppercase;
+    }
+    .hours{
+        width: 20%;
+    }
+    .sum{
+        width: 20%;
+    }
+    .description{
+        width: 100%;
+        textarea{
+            font-size: .5rem;
+            height: 1rem;
+        }
+    }
+    &__icon{
+        font-size: .5rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        transition: color .3s;
+        &:hover{
+            color: $highlight;
+        }
+        &--save{
+        }
+        &--remove{
+        }
     }
 }
 
-section{
-    padding: 0 0.5rem;
+@media print {
+    .hideOnPrint{
+        display: none;
+    }
+    .printArea{
+        width: 8.5in;
+    }
+
+    .openInvoice{
+        // z-index: -1;
+        .inputContainer{
+            &:before{
+                right: 0;
+            }
+        }
+        input, textarea{
+            @include inputStyle();
+            font-family: $bodyFont;
+            font-size: .6rem;
+            font-weight: 500;
+            width: 100% !important;
+            z-index: 999;
+            cursor: pointer;
+        }
+    }
+}
+
+/* hide up/down arrows ("spinners") on input fields marked type="number" */
+.noSpinners {
+    -moz-appearance:textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none !important; 
+    margin: 0 !important; 
+}
+
+.relative{
+    position: relative;
+}
+.fixed{
+    position: fixed;
+    width: 25%;
 }

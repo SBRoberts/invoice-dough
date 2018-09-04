@@ -4,17 +4,17 @@ const Invoices = (props) => {
     
     return(
         <div>
-            <h2>Your Invoices</h2>
+            <h2 className="heading">Your Invoices...</h2>
             <ul>
                 {
                     props.invoices.map((invoice) => {
                         return (
-                            <li id={invoice[0]} key={invoice[0]} onClick={props.pullInvoice}>
+                            <li className="invoice" id={invoice[0]} key={invoice[0]} onClick={props.pullInvoice}>
                                 <div>
-                                    <h3>{invoice[1].client}</h3>
+                                    <h3 onClick={props.pullInvoice}>{invoice[1].client}</h3>
                                 </div>
                                 <div>
-                                    <h4>{invoice[1].dateCreated}</h4>
+                                    <h4 onClick={props.pullInvoice}> {invoice[1].dateModified || invoice[1].dateCreated}</h4>
                                 </div>
                             </li>
                         )
