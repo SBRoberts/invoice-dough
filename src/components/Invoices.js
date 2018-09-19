@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import firebase from '../firebase';
 
 class Invoices extends Component{
     constructor(props){
@@ -23,14 +24,15 @@ class Invoices extends Component{
                                 this.props.invoices.map((invoice) => {
                                     return (
                                         <li className="invoice" id={invoice[0]} key={invoice[0]} onClick={(e) => {
-                                            this.props.pullInvoice(e)
                                             this.props.toggleInvoice(true)
+                                            this.props.pullInvoice(e)
                                         }}>
-                                            <div>
-                                                <h3 onClick={this.props.pullInvoice}>{invoice[1].client}</h3>
+                                            <div className="row row__spaceBetween">
+                                                <h3 >{invoice[1].client}</h3>
+                                                <button className="icon openInvoice__icon hideOnPrint" onClick={this.props.deleteInvoice}> <i className="fas fa-times fa-2x"></i></button>
                                             </div>
                                             <div>
-                                                <h4 onClick={this.props.pullInvoice}> {invoice[1].dateModified || invoice[1].dateCreated}</h4>
+                                                <h4 > {invoice[1].dateModified || invoice[1].dateCreated}</h4>
                                             </div>
                                         </li>
                                     )

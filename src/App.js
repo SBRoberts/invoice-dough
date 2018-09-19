@@ -123,11 +123,6 @@ class App extends Component {
         
     }
 
-    getLastInvoice = () => {
-        console.log(this.getInvoices())
-        
-    }
-
     getDate = () => {
         const date = new Date().toString().split(" ").slice(0, 5).join(" ")
         return date
@@ -136,10 +131,11 @@ class App extends Component {
     // get invoice from a click target id
     pullInvoiceFromDb = (e) => {
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}`)
+        // console.log('PULL INVOICE', e.currentTarget);
+        
 
         let invoiceId = '';
-        console.log(e);
-        
+
         if (typeof e !== 'string'){
             invoiceId = e.target.id || e.target.parentElement.parentElement.id
         } else{
@@ -152,11 +148,11 @@ class App extends Component {
                 const key = snapshot.key
                 // if tasks are undefined, return null
                 let tasks = [];
-                if (openInvoice.tasks){
+                if (openInvoice && openInvoice.tasks){
                     tasks = Object.entries(openInvoice.tasks);
+                    openInvoice.key = key;
+                    openInvoice.tasks = tasks;
                 }
-                openInvoice.key = key;
-                openInvoice.tasks = tasks;
                 
                 this.setState({
                     openInvoice,
@@ -167,15 +163,22 @@ class App extends Component {
     }
 
     updateTask = (e) => {
-        const key = e.target.parentElement.parentElement.id
-        const tasks = document.getElementsByClassName('openInvoice__tasks--item')
-        const inputs = tasks[key].getElementsByClassName('openInvoice__task')[0].getElementsByClassName('input')
-
+        // get task key
+        const key = e.currentTarget.parentElement.parentElement.id
+        
+        const tasks = e.currentTarget.parentElement.parentElement
+        // console.log(tasks.getElementsByClassName('openInvoice__task')[0].getElementsByTagName('input'));
+        
+        const inputs = tasks.getElementsByClassName('openInvoice__task')[0].getElementsByTagName('input')
+        const textArea = tasks.getElementsByClassName('openInvoice__task')[0].getElementsByTagName('textarea')
+        // console.log(textArea[0].value);
+        
+        // console.log(inputs);
         // ugly solution, targeting the values of inputs. The dev needs to know which input at each index are holding each value
         const task = {
             taskName: inputs[0].value,
             hours: inputs[1].value,
-            description: inputs[3].value,
+            description: textArea[0].value ? textArea[0].value : '',
             sum: `${inputs[1].value * this.state.openInvoice.hourlyRate}`,
         }
 
@@ -198,12 +201,12 @@ class App extends Component {
         
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${this.state.openInvoice.key}/tasks/${key}`)
         dbRef.update(task)
+        alert('Task Saved')
     }
 
     // will remove a task, if given an event target id
     removeTask = (e) => {
         const key = e.currentTarget.parentElement.parentElement.id
-        console.log(e.currentTarget.parentElement.parentElement.id);
         
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${this.state.openInvoice.key}/tasks/${key}`)
         dbRef.remove()
@@ -218,6 +221,14 @@ class App extends Component {
         })
     }
 
+    deleteInvoice = (e) => {
+        console.log('DELETE', e.currentTarget);
+        this.toggleInvoice(false)
+        this.closeInvoice()
+        const key = e.currentTarget.parentElement.parentElement.id
+        const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${key}`)
+        dbRef.remove()
+    }
 
     render() {
         return (
@@ -247,7 +258,8 @@ class App extends Component {
                                             getInvoices={this.getInvoices}
                                             invoices={this.state.invoices}
                                             pullInvoice={this.pullInvoiceFromDb}
-                                            toggleInvoice={this.toggleInvoice}/>
+                                            toggleInvoice={this.toggleInvoice}
+                                            deleteInvoice={this.deleteInvoice}/>
                                     } />
                                     : null
                             }
@@ -295,7 +307,7 @@ class App extends Component {
                 this.state.loggedIn && this.state.openInvoice
                 ?
                 <section className="openInvoice printArea">
-                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn} toggleInvoice={this.toggleInvoice}/>
+                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn} toggleInvoice={this.toggleInvoice} />
                 </section>
                 :
                 null

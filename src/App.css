@@ -422,6 +422,8 @@ button:not(.openInvoice__icon) {
   z-index: 999; }
   .invoice h3, .invoice h4 {
     z-index: -1; }
+  .invoice .icon {
+    font-size: .3rem; }
 
 .row {
   display: flex;

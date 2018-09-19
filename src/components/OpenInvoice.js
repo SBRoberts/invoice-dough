@@ -8,10 +8,12 @@ const OpenInvoice = (props) => {
     }
     const tallySum = () => {
         let sum = 0;
-        props.openInvoice.tasks.map((task) => {
-            sum = sum + parseInt(task[1].sum, 10);
-            return sum
-        })
+        if(props.openInvoice.tasks){
+            props.openInvoice.tasks.map((task) => {
+                sum = sum + parseInt(task[1].sum, 10);
+            })
+        }
+        return sum
         // return sum
     }
 
@@ -22,10 +24,10 @@ const OpenInvoice = (props) => {
         props.loggedIn 
         ?
         <div>
-            <button className="openInvoice openInvoice__icon closeInvoice icon hideOnPrint" onClick={() => {
+            {/* <button className="openInvoice openInvoice__icon closeInvoice icon hideOnPrint" onClick={() => {
                 props.closeInvoice()
                 props.toggleInvoice(false)
-            }}> <i className="fas fa-times fa-2x"></i></button>
+            }}> <i className="fas fa-times fa-2x"></i></button> */}
             { // Invoice Header
                 <header className="openInvoice openInvoice__header">
                     <div className="row row__spaceBetween row--nowrap">
@@ -77,7 +79,7 @@ const OpenInvoice = (props) => {
                                             </div>
 
                                             <div className="inputContainer sum">
-                                                <input type="number noSpinners" className="sum" placeholder="Sum" defaultValue={taskObj.sum} />
+                                                <input type="number noSpinners" className="sum" placeholder="Sum" defaultValue={tallySum()} />
                                             </div>
                                             <div className="inputContainer description">
                                                 <textarea id="description" className="row row__padding" onChange={this.handleChange} placeholder="Explain yourself..." defaultValue={taskObj.description}></textarea>
