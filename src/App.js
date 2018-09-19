@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import './App.css';
 import firebase from './firebase';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import { AnimatedSwitch } from 'react-router-transition';
+import './App.css';
 
 // Components
 import LogIn from './components/LogIn';
+import Landing from './components/Landing';
 import CreateInvoice from './components/CreateInvoice';
 import Invoices from './components/Invoices';
 import OpenInvoice from './components/OpenInvoice';
@@ -16,34 +19,6 @@ class App extends Component {
         this.state = {
             loggedIn: false,
         }
-        this.signIn = this.signIn.bind(this);
-        this.signOut = this.signOut.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    
-    signIn() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({
-            prompt: 'select_account'
-        });
-        firebase.auth().signInWithPopup(provider).then((res) => {
-            this.setState({
-                loggedIn: true,
-                user: res.user,
-                invoices: [],
-            });
-        });
-    }
-    anonymousLogin = () => {
-        firebase.auth().signInAnonymously().catch(function (error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
-            console.log(`Error: ${errorCode} | ${errorMessage}`);
-            
-        });
     }
     componentDidMount() {
         firebase.auth().onAuthStateChanged((res) => {
@@ -56,14 +31,14 @@ class App extends Component {
                     invoices: [],
                 })
                 this.getInvoices()
-                
-                if(!this.state.user.displayName){
+
+                if (!this.state.user.displayName) {
                     this.setState({
                         displayName: 'Guest',
                         photoURL: 'https://image.flaticon.com/icons/svg/927/927567.svg',
                     })
                 }
-                
+
             } else {
                 console.log('Res is Falsey')
                 this.setState({
@@ -73,28 +48,56 @@ class App extends Component {
                 })
             }
         });
-
     }
 
-    signOut() {
-        firebase.auth().signOut();
+    passChildState = (key, val) => {
         this.setState({
-            loggedIn: false,
-            user: {},
-            invoices: [],
+            [key]: val,
         })
     }
+    
+    // signIn = () => {
+    //     const provider = new firebase.auth.GoogleAuthProvider();
+    //     provider.setCustomParameters({
+    //         prompt: 'select_account'
+    //     });
+    //     firebase.auth().signInWithPopup(provider).then((res) => {
+    //         this.setState({
+    //             loggedIn: true,
+    //             user: res.user,
+    //             invoices: [],
+    //         });
+    //     });
+    // }
+    // anonymousLogin = () => {
+    //     firebase.auth().signInAnonymously().catch(function (error) {
+    //         // Handle Errors here.
+    //         var errorCode = error.code;
+    //         var errorMessage = error.message;
+    //         // ...
+    //         console.log(`Error: ${errorCode} | ${errorMessage}`);
+            
+    //     });
+    // }
+    // signOut() {
+    //     firebase.auth().signOut();
+    //     this.setState({
+    //         loggedIn: false,
+    //         user: {},
+    //         invoices: [],
+    //     })
+    // }
 
-    handleSubmit(e) {
-        e.preventDefault();
-        const dbRef = firebase.database().ref(`users/${this.state.user.uid}`)
-        dbRef.push(this.state.textField)
-        this.setState({
-            textField: ''
-        })
+    handleSubmit = (e) => {
+        // e.preventDefault();
+        // const dbRef = firebase.database().ref(`users/${this.state.user.uid}`)
+        // dbRef.push(this.state.textField)
+        // this.setState({
+        //     textField: ''
+        // })
     }
 
-    handleChange(e) {
+    handleChange = (e) => {
         // console.log(e.target)
         this.setState({
             [e.target.id]: e.target.value
@@ -115,8 +118,13 @@ class App extends Component {
             this.setState({
                 invoices: invoiceArr,
             })
-            
+            return invoiceArr
         })
+        
+    }
+
+    getLastInvoice = () => {
+        console.log(this.getInvoices())
         
     }
 
@@ -129,7 +137,14 @@ class App extends Component {
     pullInvoiceFromDb = (e) => {
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}`)
 
-        const invoiceId = e.target.id || e.target.parentElement.parentElement.id;
+        let invoiceId = '';
+        console.log(e);
+        
+        if (typeof e !== 'string'){
+            invoiceId = e.target.id || e.target.parentElement.parentElement.id
+        } else{
+            invoiceId = e
+        }
 
         if(invoiceId){
             dbRef.child(`${invoiceId}`).on('value', (snapshot) => {
@@ -187,8 +202,8 @@ class App extends Component {
 
     // will remove a task, if given an event target id
     removeTask = (e) => {
-        const key = e.target.parentElement.parentElement.id
-        console.log(key);
+        const key = e.currentTarget.parentElement.parentElement.id
+        console.log(e.currentTarget.parentElement.parentElement.id);
         
         const dbRef = firebase.database().ref(`users/${this.state.user.uid}/${this.state.openInvoice.key}/tasks/${key}`)
         dbRef.remove()
@@ -207,32 +222,39 @@ class App extends Component {
     render() {
         return (
             <main className="App">
+            <Router>
                 <div className="relative">
-                    <div className="fixed">
-                        <section className="sidePanel hideOnPrint">
-                            <LogIn
-                                loggedIn={this.state.loggedIn}
-                                user={this.state.user}
-                                signOut={this.signOut}
-                                signIn={this.signIn}
-                                handleSubmit={this.handleSubmit}
-                                handleChange={this.handleChange}
-                                anonymousLogin={this.anonymousLogin}
-                                displayName={this.state.displayName || null}
-                                photoURL={this.state.photoURL || null} />
-                            <section className="invoices">
-                                {
-                                // console.log(this.state, this.state.loggedIn, this.state.user.uid)
-                                this.state.loggedIn
-                                    ?
-                                    <Invoices loggedIn={this.state.loggedIn} uid={this.state.user.uid} getInvoices={this.getInvoices} invoices={this.state.invoices} pullInvoice={this.pullInvoiceFromDb} />
-                                    :
-                                    <div></div>
-                                }
-                            </section>
-                        </section>
-                    </div>
+                        <div className="sidePanel fixed">
+                            <Route path="/" key="home" render={(props) =>
+                                <Landing {...props}
+                                    loggedIn={this.state.loggedIn}
+                                    user={this.state.user}
+                                    signOut={this.signOut}
+                                    signIn={this.signIn}
+                                    handleSubmit={this.handleSubmit}
+                                    handleChange={this.handleChange}
+                                    anonymousLogin={this.anonymousLogin}
+                                    displayName={this.state.displayName || null}
+                                    photoURL={this.state.photoURL || null}
+                                    passChildState={this.passChildState} />
+                            } />
+                            {
+                                this.state.loggedIn ?
+                                    <Route path="/invoices" key="invoices" render={(props) =>
+                                        <Invoices {...props}
+                                            loggedIn={this.state.loggedIn}
+                                            uid={this.state.user.uid}
+                                            getInvoices={this.getInvoices}
+                                            invoices={this.state.invoices}
+                                            pullInvoice={this.pullInvoiceFromDb}
+                                            toggleInvoice={this.toggleInvoice}/>
+                                    } />
+                                    : null
+                            }
+                        </div>
                 </div>
+
+            </Router>
                 <div className="relative">
                     <div className="fixed">
                         <section className="invoiceManager hideOnPrint">
@@ -249,32 +271,35 @@ class App extends Component {
                                         </div>
                                         :
                                         <div className="row row__justifyCenter row__padding">
-                                            <button className="heading" onClick={() => this.toggleInvoice(false)}>Quit</button>
+                                            <button className="heading" onClick={() => {
+                                                this.toggleInvoice(false)
+                                                this.closeInvoice()
+                                            }}
+                                            >Quit</button>
                                         </div>
                                     :
                                     null
                             }
                             {
-
-                                // if toggle invoice is true, add it to this div
-                                this.state.toggleInvoice && this.state.loggedIn
-                                    ?
-                                    <CreateInvoice loggedIn={this.state.loggedIn} uid={this.state.user.uid} getDate={this.getDate} openInvoice={this.state.openInvoice} />
-                                    :
-                                    null
+                            // if toggle invoice is true, add it to this div
+                            this.state.toggleInvoice && this.state.loggedIn
+                            ?
+                            <CreateInvoice loggedIn={this.state.loggedIn} uid={this.state.user.uid} getDate={this.getDate} openInvoice={this.state.openInvoice} pullInvoiceFromDb={this.pullInvoiceFromDb}/>
+                            :
+                            null
                             }
                         </section>
                     </div>
                 </div>
-                <section className="openInvoice printArea">
                 {
-                    this.state.openInvoice
-                    ?
-                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn}/>
-                    :
-                    null
-                }
+                this.state.loggedIn && this.state.openInvoice
+                ?
+                <section className="openInvoice printArea">
+                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn} toggleInvoice={this.toggleInvoice}/>
                 </section>
+                :
+                null
+                }
             </main>
         )
     }

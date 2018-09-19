@@ -19,7 +19,7 @@ $bodyFont: 'Roboto', sans-serif;
         @include position(absolute, 65% ,10% , 15% , 10% );
         // border-bottom: .3rem solid $color;
         background: $color;
-        mix-blend-mode: multiply;
+        mix-blend-mode: soft-light;
         transition: right .3s, left .3s, top .3s, bottom .3s;
     }
     &:hover{

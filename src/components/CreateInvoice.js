@@ -48,6 +48,8 @@ class CreateInvoice extends Component {
                         this.setState({
                             invoiceCreated: true,
                             invoiceKey: currentInvoice[currentInvoice.length - 1],
+                        }, () => {
+                            this.props.pullInvoiceFromDb(this.state.invoiceKey)
                         })
                     }
                 }
@@ -114,7 +116,7 @@ class CreateInvoice extends Component {
                     ?
                     <h3>Add New Task</h3>
                     :
-                    <button type="submit">Add Invoice</button>
+                    <button type="submit" >Add Invoice</button>
                     }
 
                 </form >

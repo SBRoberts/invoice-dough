@@ -22,7 +22,10 @@ const OpenInvoice = (props) => {
         props.loggedIn 
         ?
         <div>
-            <button className="openInvoice openInvoice__icon closeInvoice icon hideOnPrint" onClick={props.closeInvoice}> <i className="fas fa-times fa-2x"></i></button>
+            <button className="openInvoice openInvoice__icon closeInvoice icon hideOnPrint" onClick={() => {
+                props.closeInvoice()
+                props.toggleInvoice(false)
+            }}> <i className="fas fa-times fa-2x"></i></button>
             { // Invoice Header
                 <header className="openInvoice openInvoice__header">
                     <div className="row row__spaceBetween row--nowrap">

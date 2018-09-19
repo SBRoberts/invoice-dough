@@ -1,3 +1,4 @@
+@import './partials/setup';
 @import './partials/utilities';
 
 body {
@@ -5,6 +6,10 @@ body {
     padding: 0;
     font-family: $bodyFont;
     background: $white;
+}
+a, a:active, a:visited{
+    text-decoration: none;
+    font-style: normal;
 }
 
 html{
@@ -64,6 +69,7 @@ button:not(.openInvoice__icon){
     .heading{
         margin-bottom: .5rem;
         font-weight: 400;
+        width: 100%;
     }
 }
 .heading{
@@ -79,6 +85,53 @@ button:not(.openInvoice__icon){
     &__big{
         font-size: 1.5rem;
         text-transform: uppercase;
+    }
+}
+
+.landing{
+    background-color: $highlight;
+    &.landingTrue{
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: -1;
+        &:before{
+            content: '';
+            @include position(absolute,10vmax,-10vmax,-40vmin,0);
+            background: url("./assets/cookieDough.svg") no-repeat;
+            background-position: bottom right;
+            background-size: 105vmin;
+            z-index: -1;
+        }
+        h1{
+            font-size: 2rem !important;
+            text-transform: uppercase;
+            @include highlight($white);
+            z-index: 999;
+            &:before{
+                @include position(absolute,50%,0,0,0);
+                // mix-blend-mode: normal;
+                // z-index: 0;
+            }
+        }
+        .login{
+            display: flex;
+            justify-content: center;
+            h3{
+                text-align: center;
+                font-size: 1rem;
+            }
+        }
+        button{
+            font-size: .8rem;
+        }
+    }
+    &.landingFalse{
+        width: 100%;
     }
 }
 
@@ -342,3 +395,5 @@ input[type=number]::-webkit-outer-spin-button {
     position: fixed;
     width: 25%;
 }
+
+@import './partials/mediaQueries';
