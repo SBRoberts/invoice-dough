@@ -3,6 +3,8 @@ import React from 'react';
 const OpenInvoice = (props) => {
     
     const printDate = (date) => {
+        console.log(date.split(' ').splice(1, 3).join('/'));
+        
         const newDate = date.split(' ').splice(1,3).join('/')
         return newDate
     }
@@ -35,7 +37,7 @@ const OpenInvoice = (props) => {
                         <div className="row  row__justifyFlexEnd row__alignCenter row--nowrap">
                             <p>{props.openInvoice.key}</p>
                             <p className="bar"> | </p>
-                            <p>{props.openInvoice.dateModified ? `${printDate(props.openInvoice.dateModified)}` : printDate(props.openInvoice.dateCreated)}</p>
+                            <p>{printDate(props.openInvoice.dateCreated)}</p>
                         </div>
 
                     </div>

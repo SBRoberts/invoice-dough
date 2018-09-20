@@ -222,7 +222,6 @@ class App extends Component {
     }
 
     deleteInvoice = (e) => {
-        console.log('DELETE', e.currentTarget);
         this.toggleInvoice(false)
         this.closeInvoice()
         const key = e.currentTarget.parentElement.parentElement.id
@@ -234,7 +233,7 @@ class App extends Component {
         return (
             <main className="App">
             <Router>
-                <div className="relative">
+                <div className="relative mainPanel">
                         <div className="sidePanel fixed">
                             <Route path="/" key="home" render={(props) =>
                                 <Landing {...props}
@@ -267,9 +266,9 @@ class App extends Component {
                 </div>
 
             </Router>
-                <div className="relative">
-                    <div className="fixed">
-                        <section className="invoiceManager hideOnPrint">
+                <div className="relative invoiceManagerPanel">
+                    <div className="fixed invoiceManager hideOnPrint">
+                        <section className="">
                             {
                                 // if user is logged in show stuff, otherwise show nothing
                                 this.state.loggedIn
@@ -303,15 +302,17 @@ class App extends Component {
                         </section>
                     </div>
                 </div>
-                {
-                this.state.loggedIn && this.state.openInvoice
-                ?
-                <section className="openInvoice printArea">
-                    <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn} toggleInvoice={this.toggleInvoice} />
-                </section>
-                :
-                null
-                }
+                <div className="relative openInvoice">
+                    {
+                    this.state.loggedIn && this.state.openInvoice
+                    ?
+                    <section className="openInvoice printArea">
+                        <OpenInvoice openInvoice={this.state.openInvoice} closeInvoice={this.closeInvoice} displayName={this.state.user.displayName} updateTask={this.updateTask} removeTask={this.removeTask} user={this.state.user} loggedIn={this.state.loggedIn} toggleInvoice={this.toggleInvoice} />
+                    </section>
+                    :
+                    null
+                    }
+                </div>
             </main>
         )
     }

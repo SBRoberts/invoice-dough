@@ -2,7 +2,7 @@
   "name": "spencer_roberts_project5",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://spen.io/invoiceDough",
+  "homepage": "https://dubble-35c8a.firebaseapp.com",
   "dependencies": {
     "axios": "^0.18.0",
     "firebase": "^5.4.1",

@@ -144,7 +144,7 @@ a, a:active, a:visited {
 html {
   font-weight: 400;
   /* Fluid font sizing | scales based on viewport width and desired min/max font sizes*/
-  font-size: calc(14px + (30 - 14) * ((100vw - 320px) / (1440 - 320)));
+  font-size: calc(20px + (32 - 20) * ((100vw - 320px) / (1440 - 320)));
   letter-spacing: .03rem; }
 
 section {
@@ -613,9 +613,48 @@ input[type=number]::-webkit-outer-spin-button {
 /* Portrait tablet and small desktops */
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
+  .App {
+    display: flex;
+    flex-wrap: wrap; }
   .landing.landingFalse {
     width: 100%;
     height: 100vh;
-    padding: 1vmin; } }
+    padding: 1vmin; }
+  .mainPanel, .invoiceManagerPanel {
+    width: 50%;
+    display: flex;
+    align-self: stretch;
+    transition: height .3s;
+    padding: 0.5rem; }
+    .mainPanel .fixed, .invoiceManagerPanel .fixed {
+      width: 100%;
+      height: auto;
+      position: relative; }
+    .mainPanel .landing, .invoiceManagerPanel .landing {
+      width: inherit;
+      height: inherit; }
+    .mainPanel button:not(.login), .invoiceManagerPanel button:not(.login) {
+      margin-bottom: 1rem; }
+  .openInvoice {
+    width: 100%; }
+    .openInvoice__icon {
+      width: auto; } }
 
 /* Landscape phones and down */
+@media (max-width: 480px) {
+  .mainPanel, .invoiceManagerPanel {
+    width: 100%;
+    display: flex;
+    align-self: stretch;
+    transition: height .3s; }
+    .mainPanel .fixed, .invoiceManagerPanel .fixed {
+      width: 100%;
+      height: auto;
+      position: relative; }
+    .mainPanel .landing, .invoiceManagerPanel .landing {
+      width: inherit;
+      height: inherit; }
+  .landingFalse, .login {
+    display: flex;
+    justify-content: center;
+    text-align: center; } }

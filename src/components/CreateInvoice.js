@@ -76,7 +76,7 @@ class CreateInvoice extends Component {
 
         // if choice is confirmed, do the following else null
         if(confirmChoice){
-            const tasksArr = Array.from(this.state.tasks);
+            const tasksArr = this.state.tasks ? Array.from(this.state.tasks) : [];
             const task = {
                 taskName : e.target[0].value,
                 hours: e.target[1].value,
@@ -85,6 +85,8 @@ class CreateInvoice extends Component {
             }
             
             tasksArr.push(task)
+            console.log(tasksArr);
+            
             
             this.setState({
                 tasks: tasksArr,

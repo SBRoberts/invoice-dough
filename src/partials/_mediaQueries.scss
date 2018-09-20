@@ -2,6 +2,10 @@
 @media (max-width: 940px) {}
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
+    .App{
+        display: flex;
+        flex-wrap: wrap;
+    }
     .landing{
         &.landingFalse{
             width: 100%;
@@ -9,6 +13,56 @@
             padding: 1vmin;
         }
     }
+    .mainPanel, .invoiceManagerPanel{
+        width: 50%;
+        // min-height: 30vh;
+        display: flex;
+        align-self: stretch;
+        transition: height .3s;
+        // margin-bottom: 2rem;
+        padding: 0.5rem;
+        .fixed{
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        .landing{
+            width: inherit;
+            height: inherit;
+        }
+        button:not(.login){
+            margin-bottom: 1rem;
+        }
+    }
+    .openInvoice{
+        width: 100%;
+        &__icon{
+            width: auto;
+        }
+    }
 }
 /* Landscape phones and down */
-@media (max-width: 480px) {}
+@media (max-width: 480px) {
+    .mainPanel, .invoiceManagerPanel{
+        width: 100%;
+        // min-height: 30vh;
+        display: flex;
+        align-self: stretch;
+        transition: height .3s;
+        // margin-bottom: 2rem;
+        .fixed{
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        .landing{
+            width: inherit;
+            height: inherit;
+        }
+    }
+    .landingFalse, .login{
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+}
